@@ -1,0 +1,68 @@
+import sqlite3
+
+# 1. Connect to SQLite database (creates file if not exists)
+conn = sqlite3.connect("users.db")
+cursor = conn.cursor()
+
+# 2. Create table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    age INTEGER
+)
+""")
+
+print("Table created successfully")
+
+# 3. Insert user records (parameterized query)
+users = [
+    ("Alice", "alice@gmail.com", 24),
+    ("Bob", "bob@gmail.com", 28),
+    ("Charlie", "charlie@gmail.com", 22)
+]
+
+cursor.executemany(
+    "INSERT OR IGNORE INTO users (name, email, age) VALUES (?, ?, ?)",
+    users
+)
+
+conn.commit()
+print("Records inserted")
+
+# 4. Fetch records
+print("\nAll Users:")
+cursor.execute("SELECT * FROM users")
+rows = cursor.fetchall()
+
+for row in rows:
+    print(row)
+
+# 5. Update record
+cursor.execute(
+    "UPDATE users SET age = ? WHERE email = ?",
+    (30, "bob@gmail.com")
+)
+conn.commit()
+print("\nRecord updated")
+
+# 6. Delete record
+cursor.execute(
+    "DELETE FROM users WHERE name = ?",
+    ("Charlie",)
+)
+conn.commit()
+print("Record deleted")
+
+# 7. Fetch records after update & delete
+print("\nFinal Users List:")
+cursor.execute("SELECT * FROM users")
+rows = cursor.fetchall()
+
+for row in rows:
+    print(f"ID: {row[0]}, Name: {row[1]}, Email: {row[2]}, Age: {row[3]}")
+
+# 8. Close connection
+conn.close()
+print("\nDatabase connection closed")
