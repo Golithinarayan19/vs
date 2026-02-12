@@ -1,0 +1,6 @@
+OrderID,Customer,Region,Product,Quantity,Price
+1001,John,East,Laptop,2,50000
+1002,Alice,West,Mobile,1,20000
+1003,Bob,East,Tablet,3,15000
+1004,John,South,Mobile,2,20000
+1005,Alice,West,Laptop,,50000

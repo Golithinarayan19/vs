@@ -1,0 +1,43 @@
+import pandas as pd
+
+# 1. Load CSV dataset
+df = pd.read_csv("sales_data.csv")
+
+print("===== First 5 Rows =====")
+print(df.head())
+
+print("\n===== Dataset Info =====")
+print(df.info())
+
+print("\n===== Statistical Summary =====")
+print(df.describe())
+
+# 2. Handle Missing Values
+print("\n===== Missing Values =====")
+print(df.isnull().sum())
+
+# Fill missing Quantity with mean
+df['Quantity'].fillna(df['Quantity'].mean(), inplace=True)
+
+# 3. Add New Calculated Column
+df['Total_Sales'] = df['Quantity'] * df['Price']
+
+# 4. Filter Data (Only East Region)
+east_region = df[df['Region'] == 'East']
+print("\n===== East Region Data =====")
+print(east_region)
+
+# 5. Sort Data by Total Sales
+sorted_df = df.sort_values(by='Total_Sales', ascending=False)
+print("\n===== Sorted by Total Sales =====")
+print(sorted_df)
+
+# 6. Group Data (Region-wise Total Sales)
+region_sales = df.groupby('Region')['Total_Sales'].sum()
+print("\n===== Region Wise Total Sales =====")
+print(region_sales)
+
+# 7. Export Cleaned Data
+df.to_csv("cleaned_sales_data.csv", index=False)
+
+print("\n✅ Cleaned dataset exported successfully!")
